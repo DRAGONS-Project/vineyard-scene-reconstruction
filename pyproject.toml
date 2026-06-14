@@ -1,0 +1,44 @@
+[project]
+name = "project"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    # Core experiment stack
+    "torch>=2.4.0",
+    "hydra-core>=1.3.0",
+    "omegaconf>=2.3.0",
+    "wandb>=0.17.0",
+    "tqdm>=4.66.0",
+    "numpy>=2.0.0",
+    "ruff",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+extend-select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "N",    # pep8-naming
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (modernize code)
+    "B",    # bugbear (catch bugs)
+    "SIM",  # flake8-simplify (simplify code)
+    "NPY",  # NumPy-specific rules
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "N803", # Argument name should be lowercase
+    "N806", # Variable should be lowercase
+    "N812", # Lowercase imported as non-lowercase
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
