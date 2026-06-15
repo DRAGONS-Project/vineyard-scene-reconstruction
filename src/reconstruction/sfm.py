@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pycolmap
 
+from config import load_config
+
 
 def run_sfm(image_dir: Path, output_dir: Path, camera_model: str = "OPENCV") -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -12,7 +14,9 @@ def run_sfm(image_dir: Path, output_dir: Path, camera_model: str = "OPENCV") -> 
     sparse_dir = output_dir / "sparse"
     sparse_dir.mkdir(parents=True, exist_ok=True)
 
-    pycolmap.extract_features(database_path, image_dir, camera_model=camera_model)
+    pycolmap.extract_features(
+        database_path, image_dir, reader_options=pycolmap.ImageReaderOptions(camera_model=camera_model)
+    )
     pycolmap.match_exhaustive(database_path)
 
     reconstructions = pycolmap.incremental_mapping(database_path, image_dir, sparse_dir)
@@ -31,12 +35,16 @@ def run_sfm(image_dir: Path, output_dir: Path, camera_model: str = "OPENCV") -> 
 
 
 def main():
+    config = load_config()
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("image_dir", type=Path, help="Directory of input images")
     parser.add_argument(
         "output_dir", type=Path, help="Directory for the COLMAP database and sparse model"
     )
-    parser.add_argument("--camera-model", default="OPENCV", help="COLMAP camera model")
+    parser.add_argument(
+        "--camera-model", default=config.colmap.camera_model, help="COLMAP camera model"
+    )
     args = parser.parse_args()
 
     sparse_dir = run_sfm(args.image_dir, args.output_dir, args.camera_model)

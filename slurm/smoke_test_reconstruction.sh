@@ -3,7 +3,7 @@
 #SBATCH --account=plgdragons
 #SBATCH --qos=plgdragons
 #SBATCH --partition=plgrid-lem-gpu-h100
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:hopper:1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32GB
@@ -24,15 +24,16 @@ cd "$PROJECT_DIR"
 VIDEO="$WORK_DIR/Row4.3_2.mp4"
 wget -c -O "$VIDEO" "https://zenodo.org/api/records/7330951/files/Row4.3_2.mp4/content"
 
-# 1. Frame extraction
+# 1. Frame extraction (uses standardized fps/max-dim/max-frames from configs/reconstruction.yaml)
 uv run --extra recon python src/reconstruction/extract_frames.py \
-    "$VIDEO" "$WORK_DIR/frames" --fps 2
+    "$VIDEO" "$WORK_DIR/frames"
 
 # 2. COLMAP SfM (pycolmap)
 uv run --extra recon python src/reconstruction/sfm.py \
     "$WORK_DIR/frames" "$WORK_DIR/colmap"
 
-# 3. 3DGS training (short run for smoke test)
+# 3. 3DGS training — short run for smoke test (overrides the standardized iters/save-every,
+# which are tuned for quality runs, not pipeline validation). Holdout/eval still exercised.
 uv run --extra recon python src/reconstruction/train_gs.py \
     "$WORK_DIR/colmap/sparse/0" "$WORK_DIR/frames" "$OUTPUT_DIR" \
     --iters 500 --save-every 100
