@@ -31,6 +31,7 @@ def run_sfm(image_dir: Path, output_dir: Path, camera_model: str = "OPENCV") -> 
         f"Reconstruction {best_idx}: {best.num_reg_images()} images registered, "
         f"{best.num_points3D()} points"
     )
+    (output_dir / "best_sparse_dir.txt").write_text(str(best_dir))
     return best_dir
 
 

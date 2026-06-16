@@ -25,9 +25,25 @@ recon = [
     "scikit-image>=0.24.0",
 ]
 
+# 3DGS training via Nerfstudio's splatfacto (adaptive density control, SH, eval).
+recon-ns = [
+    "nerfstudio>=1.1.5",
+    "imageio-ffmpeg>=0.5.1",  # bundled ffmpeg binary; cluster has no system ffmpeg
+]
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.uv]
+# HPC-only project; avoid resolving macOS/Windows-only dependency branches
+# (nerfstudio's optional newrawpy pulls in a pre-release-only arm64/darwin wheel).
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
+# nerfstudio's pymeshlab pin (2025.7.post1, mesh-export only, unused by splatfacto
+# train/eval) requires glibc 2.35; this cluster has 2.34. Pin to the latest version
+# with a manylinux_2_31 wheel.
+override-dependencies = ["pymeshlab==2023.12.post3"]
 
 [tool.ruff]
 line-length = 100

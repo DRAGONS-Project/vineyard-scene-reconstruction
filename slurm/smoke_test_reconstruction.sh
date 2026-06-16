@@ -31,11 +31,12 @@ uv run --extra recon python src/reconstruction/extract_frames.py \
 # 2. COLMAP SfM (pycolmap)
 uv run --extra recon python src/reconstruction/sfm.py \
     "$WORK_DIR/frames" "$WORK_DIR/colmap"
+SPARSE_DIR=$(cat "$WORK_DIR/colmap/best_sparse_dir.txt")
 
 # 3. 3DGS training — short run for smoke test (overrides the standardized iters/save-every,
 # which are tuned for quality runs, not pipeline validation). Holdout/eval still exercised.
 uv run --extra recon python src/reconstruction/train_gs.py \
-    "$WORK_DIR/colmap/sparse/0" "$WORK_DIR/frames" "$OUTPUT_DIR" \
+    "$SPARSE_DIR" "$WORK_DIR/frames" "$OUTPUT_DIR" \
     --iters 500 --save-every 100
 
 echo "Done. Outputs in $OUTPUT_DIR"
