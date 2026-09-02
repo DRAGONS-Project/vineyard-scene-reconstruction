@@ -13,6 +13,8 @@
 
 set -euo pipefail
 
+module load CUDA/13.0.0
+
 PROJECT_DIR=/lustre/pd03/plgrid/plgdragons/vineyard-scene-reconstruction
 WORK_DIR=/lustre/tmp/slurm/$SLURM_JOB_ID/work
 OUTPUT_DIR=$PROJECT_DIR/outputs/reconstruction/smoke_test
