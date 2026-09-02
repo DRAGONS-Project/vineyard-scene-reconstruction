@@ -56,15 +56,15 @@ To go beyond the smoke test, pull one of the datasets the pipeline has been run 
 - [Multispectral Botrytis](https://zenodo.org/records/7383601)
 - [BLT (Bacchus Long-Term)](https://lcas.lincoln.ac.uk/wp/research/data-sets-software/blt/)
 
-`slurm/download_datasets.sh` bulk-downloads them to scratch.
+`slurm/download_datasets.sh` bulk-downloads them.
 
 ## 🔧 Known failure modes and fixes
 
 Not every dataset reconstructs cleanly out of the box. Three failure modes have been identified so far:
 
-- **Lens flare / veiling glare + lens ghost** (MOTS UAV footage, backlit sun) — `src/reconstruction/deflare_dark_channel.py` (dark-channel-prior deglare) + `src/reconstruction/generate_ghost_masks.py` (ghost region mask).
-- **Multispectral band misalignment** (Micasense RedEdge-MX, 5 physically separate lenses, no embedded calibration) — `src/reconstruction/extract_botrytis_rgb.py` (ORB-matched per-band alignment + joint color stretch).
-- **Narrow FOV / low frame overlap** (BLT ground-robot sequences) — COLMAP registers only ~half the input frames; ruled out robot-body occlusion as the cause by re-running SfM on robot-body-masked frames (no improvement). The intended fix, seeding Gaussians from the robot's RGB-D depth maps in regions COLMAP fails to cover, has not been implemented yet.
+- **Lens flare, veiling glare and lens ghost** (MOTS UAV footage, backlit sun) — `src/reconstruction/deflare_dark_channel.py` (dark-channel-prior deglare) + `src/reconstruction/generate_ghost_masks.py` (ghost region mask).
+- **Multispectral band misalignment** (Botrytis, 5 physically separate lenses, no embedded calibration) — `src/reconstruction/extract_botrytis_rgb.py` (ORB-matched per-band alignment + joint color stretch).
+- **Robot in frame and low frame overlap** (BLT ground-robot sequences) — COLMAP registers only ~half the input frames; ruled out robot-body occlusion as the cause by re-running SfM on robot-body-masked frames.
 
 ## 📁 Repo map
 
