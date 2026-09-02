@@ -220,3 +220,6 @@ multirun/
 
 # Downloaded datasets
 data/
+
+# Paper (LaTeX build products, generated figures) -- tracked outside git
+paper/
