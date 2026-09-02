@@ -223,3 +223,9 @@ data/
 
 # Paper (LaTeX build products, generated figures) -- tracked outside git
 paper/
+
+# Internal research logs / dataset survey notes -- findings, not code; tracked outside git
+docs/flare_fix_plan.md
+docs/flare_fix_research.md
+docs/datasets/
+docs/dragons_initial_eval.pdf
